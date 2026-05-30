@@ -19,17 +19,29 @@ const GRADIENT_STOPS = [
   { offset: "100%", color: "#40c8e0" }, // glacial
 ];
 
-// Per-point oscillation so the curve drifts as if someone is shaping it.
-const WAVES = [
-  { base: 0.58, amp: 0.32, period: 7100, phase: 0.0 },
-  { base: 0.42, amp: 0.4, period: 5300, phase: 1.7 },
-  { base: 0.62, amp: 0.3, period: 8200, phase: 3.1 },
-  { base: 0.36, amp: 0.42, period: 6100, phase: 4.4 },
-  { base: 0.52, amp: 0.34, period: 7700, phase: 5.6 },
-];
+// The curve animates point-by-point (staggered) to a fresh random target,
+// holds, then transitions to the next one — forever.
+const VALUE_MIN = 0.12;
+const VALUE_MAX = 0.88;
+const STAGGER = 110; // ms between successive points starting to move
+const DURATION = 700; // ms each point takes to reach its target
+const HOLD = 1000; // ms the curve rests once fully settled
+
+// Deterministic resting curve for first paint + reduced-motion fallback.
+const INITIAL = [0.55, 0.4, 0.62, 0.34, 0.5];
 
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, v));
+
+// easeInOutCubic
+const ease = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+const randomCurve = () =>
+  Array.from(
+    { length: POINT_COUNT },
+    () => VALUE_MIN + Math.random() * (VALUE_MAX - VALUE_MIN),
+  );
 
 const xs = Array.from(
   { length: POINT_COUNT },
@@ -37,15 +49,6 @@ const xs = Array.from(
 );
 
 const yForValue = (v: number) => PAD_Y + (100 - 2 * PAD_Y) * (1 - v);
-
-const valueAt = (i: number, t: number) => {
-  const w = WAVES[i];
-  return clamp(
-    w.base + w.amp * Math.sin((2 * Math.PI * t) / w.period + w.phase),
-    0.08,
-    0.92,
-  );
-};
 
 // Catmull-Rom through the points, emitted as cubic béziers — same construction
 // the app uses (b1 = p1 + (p2 - pPrev)/6, b2 = p2 - (pNext - p1)/6).
@@ -74,26 +77,43 @@ export default function EnergyCurve() {
   const pathRef = useRef<SVGPathElement>(null);
   const thumbRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Static first-paint values (also the reduced-motion resting state).
-  const initial = useMemo(() => WAVES.map((_, i) => valueAt(i, 0)), []);
-  const initialPath = useMemo(() => splinePath(initial), [initial]);
+  const initialPath = useMemo(() => splinePath(INITIAL), []);
 
   useEffect(() => {
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
     let raf = 0;
+    let from = [...INITIAL];
+    let to = randomCurve();
+    let cycleStart = performance.now();
+
+    // When the last (most-delayed) point finishes its transition.
+    const settledAt = () =>
+      cycleStart + (POINT_COUNT - 1) * STAGGER + DURATION;
+
     const tick = () => {
-      const t = performance.now();
-      const ys = WAVES.map((_, i) => valueAt(i, t));
-      pathRef.current?.setAttribute("d", splinePath(ys));
-      ys.forEach((v, i) => {
+      const now = performance.now();
+      if (now >= settledAt() + HOLD) {
+        from = to;
+        to = randomCurve();
+        cycleStart = now;
+      }
+
+      const ys = from.map((f, i) => {
+        const p = clamp((now - (cycleStart + i * STAGGER)) / DURATION, 0, 1);
+        const v = f + (to[i] - f) * ease(p);
+        // Nudge the thumb larger while it's mid-move, like grabbing it.
+        const grab = 1 + 0.16 * Math.sin(p * Math.PI);
         const thumb = thumbRefs.current[i];
-        if (thumb) thumb.style.top = `${yForValue(v)}%`;
+        if (thumb) {
+          thumb.style.top = `${yForValue(v)}%`;
+          thumb.style.transform = `translate(-50%, -50%) scale(${grab.toFixed(3)})`;
+        }
+        return v;
       });
+      pathRef.current?.setAttribute("d", splinePath(ys));
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -163,8 +183,12 @@ export default function EnergyCurve() {
           ref={(el) => {
             thumbRefs.current[i] = el;
           }}
-          className="absolute flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/15 shadow-lg shadow-black/20 backdrop-blur-md dark:border-white/25"
-          style={{ left: `${x}%`, top: `${yForValue(initial[i])}%` }}
+          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/15 shadow-lg shadow-black/20 backdrop-blur-md dark:border-white/25"
+          style={{
+            left: `${x}%`,
+            top: `${yForValue(INITIAL[i])}%`,
+            transform: "translate(-50%, -50%)",
+          }}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-foreground/60" />
         </div>
