@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef } from "react"
+import { energyColors } from "./energyColors"
 
 // Mirrors the real app's EnergyCurveEditor: five control points joined by a
 // Catmull-Rom spline, stroked with a vertical energy gradient (intense at the
@@ -13,10 +14,10 @@ const PAD_Y = 14 // vertical inset
 
 // Energy bands, top (intense) to bottom (glacial) — Apple system hues.
 const GRADIENT_STOPS = [
-  { offset: "0%", color: "#ff453a" }, // intense
-  { offset: "38%", color: "#bf5af2" }, // energetic
-  { offset: "68%", color: "#0a84ff" }, // mellow
-  { offset: "100%", color: "#40c8e0" }, // glacial
+  { offset: "0%", color: energyColors.intense },
+  { offset: "38%", color: energyColors.energetic },
+  { offset: "68%", color: energyColors.mellow },
+  { offset: "100%", color: energyColors.glacial },
 ]
 
 // The curve animates point-by-point (staggered) to a fresh random target,
@@ -119,7 +120,7 @@ export default function EnergyCurve() {
   }, [])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-hairline bg-foreground/[0.03]">
+    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
       {/* dot-grid backdrop */}
       <div
         aria-hidden

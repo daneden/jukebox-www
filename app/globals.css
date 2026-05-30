@@ -47,3 +47,112 @@ body {
     transform: none;
   }
 }
+
+/* Flip-clock letter cascade for the Siri phrase cycler: each character
+   rolls up into place with a blur, staggered by index (delay set inline). */
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes letter-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(-0.5em);
+  }
+}
+
+.siri-letter {
+  display: inline-block;
+  white-space: pre;
+}
+
+.siri-letter-in {
+  animation: letter-in 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.siri-letter-out {
+  animation: letter-out 0.34s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+/* A soft gradient bloom that grows, brightens, and drifts across the panel
+   once per phrase — keyed to the phrase so it restarts each cycle. Duration is
+   set inline to match the phrase's on-screen time. */
+@keyframes siri-bloom {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(-2%) scale(0.55);
+    /* quick bloom-in, then a steady hold + fade so the tail doesn't
+       decelerate into a perceived pause before it's fully gone */
+    animation-timing-function: ease-out;
+  }
+  34% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(2%) scale(0.95);
+    animation-timing-function: linear;
+  }
+  62% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(9%) scale(1.12);
+    animation-timing-function: ease-in;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(54%) scale(1.4);
+  }
+}
+
+/* Mirror of siri-bloom: the two colour layers start overlapped (blended),
+   then drift apart on opposite arcs — pulling well apart as they fade. */
+@keyframes siri-bloom-alt {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(2%) scale(0.55);
+    animation-timing-function: ease-out;
+  }
+  34% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(-2%) scale(0.95);
+    animation-timing-function: linear;
+  }
+  62% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(-9%) scale(1.12);
+    animation-timing-function: ease-in;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(-54%) scale(1.4);
+  }
+}
+
+.siri-bloom {
+  animation: siri-bloom var(--bloom-dur, 3500ms) ease-in-out both;
+}
+
+.siri-bloom-alt {
+  animation: siri-bloom-alt var(--bloom-dur, 3500ms) ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .siri-bloom,
+  .siri-bloom-alt {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

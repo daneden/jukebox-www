@@ -1,4 +1,5 @@
 import EnergyCurve from "./EnergyCurve"
+import SiriPhrases from "./SiriPhrases"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
 
 function Feature({
@@ -93,6 +94,19 @@ export default function Home() {
           from glacial calm up to full intensity &mdash; and Playback fills it
           with songs that rise and fall to match. Curate playlists to suit your
           mood.
+        </p>
+      </Feature>
+
+      <Feature title="Just ask" visual={<SiriPhrases />}>
+        <p>
+          Every mode answers to your voice. Ask Siri to make a playlist, design
+          one by mood, play something at random, or save what&rsquo;s playing to
+          your library &mdash; and tap a Control Center button to start the music
+          without unlocking your phone.
+        </p>
+        <p>
+          It all runs on Shortcuts, so you can wire Playback into routines of
+          your own.
         </p>
       </Feature>
     </main>
