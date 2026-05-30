@@ -1,7 +1,7 @@
-import EnergyCurve from "./EnergyCurve";
+import EnergyCurve from "./EnergyCurve"
 
 // Swap this for the real listing URL once Playback is live on the App Store.
-const APP_STORE_URL = "https://apps.apple.com/app/playback-music";
+const APP_STORE_URL = "https://apps.apple.com/app/playback-music"
 
 function Logomark({ className }: { className?: string }) {
   return (
@@ -18,7 +18,7 @@ function Logomark({ className }: { className?: string }) {
       />
       <path d="M90.7062 128.514C86.5039 141.684 78.3056 146.324 66.1113 142.432C61.8027 141.058 58.7367 138.736 56.9135 135.467C55.1162 132.117 54.8531 128.45 56.1242 124.466C57.4212 120.402 60.0959 117.493 64.1484 115.741C68.2268 113.907 72.5423 113.716 77.0948 115.169C80.3227 116.199 81.9366 116.714 82.2605 116.779C85.9473 117.522 87.3973 116.774 88.9271 113.338C89.0614 113.036 89.3484 112.137 89.9222 110.339L96.2382 90.5448C97.596 86.2894 98.2749 84.1618 97.8322 82.4754C97.4447 80.9991 96.5091 79.726 95.2158 78.9152C93.7387 77.9891 91.5056 78.0017 87.0394 78.0267C83.7812 78.045 80.4104 78.0638 77.5552 78.0798C72.7737 78.1066 66.5462 78.1416 61.8236 78.168C59.3196 78.1821 58.0677 78.1891 57.0061 78.6162C56.0687 78.9933 55.2418 79.601 54.602 80.383C53.8773 81.2685 53.4964 82.4622 52.7347 84.8496L38.9788 127.96C34.6987 141.373 26.3802 146.109 14.0234 142.166C9.71475 140.791 6.68946 138.482 4.94751 135.239C3.20557 131.996 2.9831 128.342 4.28011 124.277C5.57711 120.213 8.08925 117.252 11.8165 115.396C15.6511 113.485 19.8852 113.268 24.5191 114.747C28.4953 116.016 30.4835 116.65 31.189 116.702C34.1061 116.919 35.3162 116.286 36.8019 113.766C37.1612 113.157 37.552 111.884 38.3337 109.34L62.0578 32.1006C62.8023 29.6768 63.1745 28.4649 63.8997 27.5654C64.54 26.7712 65.3722 26.1533 66.3177 25.7703C67.3886 25.3364 68.6554 25.3307 71.189 25.3194C77.4118 25.2917 86.5247 25.2511 93.3493 25.2207C98.199 25.1991 104.204 25.1723 109.507 25.1487C113.926 25.129 116.136 25.1191 117.606 26.0362C118.893 26.8391 119.828 28.0999 120.223 29.5647C120.674 31.2375 120.023 33.35 118.722 37.5749L90.7062 128.514Z" />
     </svg>
-  );
+  )
 }
 
 function AppleLogo({ className }: { className?: string }) {
@@ -31,28 +31,24 @@ function AppleLogo({ className }: { className?: string }) {
     >
       <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
     </svg>
-  );
+  )
 }
 
 function Feature({
-  index,
   name,
   title,
   children,
   visual,
 }: {
-  index: string;
-  name: string;
-  title: string;
-  children: React.ReactNode;
-  visual?: React.ReactNode;
+  name: string
+  title: string
+  children: React.ReactNode
+  visual?: React.ReactNode
 }) {
   return (
     <section className="border-t border-hairline py-14 sm:py-20">
-      <p className="font-display text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-        {index} <span className="px-1.5 text-hairline">/</span> {name}
-      </p>
-      <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+      <p className="font-display text-s font-semibold text-muted">{name}</p>
+      <h2 className="font-display text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
         {title}
       </h2>
       <div className="mt-4 space-y-4 text-lg leading-relaxed text-muted text-pretty">
@@ -60,7 +56,7 @@ function Feature({
       </div>
       {visual && <div className="mt-9">{visual}</div>}
     </section>
-  );
+  )
 }
 
 export default function Home() {
@@ -110,26 +106,24 @@ export default function Home() {
         </a>
       </section>
 
-      <Feature index="01" name="Songs" title="A rotation tuned to you">
+      <Feature name="Songs" title="A rotation tuned to you">
         <p>
-          Songs surfaces an endless rotation drawn from your own library. A
-          bespoke algorithm walks from one track to the next &mdash; weighing
-          similarity, energy, and how long it&rsquo;s been since you last
-          listened &mdash; so the music you&rsquo;d drifted away from finds its
-          way back into earshot.
+          An endless rotation drawn from your own library. A bespoke algorithm
+          walks from one track to the next, weighing similarity, energy, and how
+          long it&rsquo;s been since you last listened.
         </p>
       </Feature>
 
-      <Feature index="02" name="Playlists" title="Shuffle your whole library">
+      <Feature name="Playlists" title="Shuffle your whole library">
         <p>
-          Sometimes you just want to press play. Playlists spins a dial through
-          your Apple Music playlists and lands on one at random &mdash; your
-          collection, reshuffled, with none of the deciding.
+          You&rsquo;ve got good taste: Playback brings it to the fore. The
+          Playlists tab spins a dial through your Apple Music playlists and
+          lands on one at random. Your collection, reshuffled, with none of the
+          deciding.
         </p>
       </Feature>
 
       <Feature
-        index="03"
         name="Design"
         title="Draw the shape of a playlist"
         visual={<EnergyCurve />}
@@ -137,8 +131,8 @@ export default function Home() {
         <p>
           Build a playlist by drawing its shape. Sketch an energy curve &mdash;
           from glacial calm up to full intensity &mdash; and Playback fills it
-          with songs that rise and fall to match, so a set can ease in, peak,
-          and wind back down right on cue.
+          with songs that rise and fall to match. Curate playlists to suit your
+          mood.
         </p>
       </Feature>
 
@@ -155,5 +149,5 @@ export default function Home() {
         </p>
       </footer>
     </main>
-  );
+  )
 }

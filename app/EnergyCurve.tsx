@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react"
 
 // Mirrors the real app's EnergyCurveEditor: five control points joined by a
 // Catmull-Rom spline, stroked with a vertical energy gradient (intense at the
 // top, glacial at the bottom). The "liquid glass" thumbs are faked with a
 // backdrop blur rather than the live glassEffect material.
 
-const POINT_COUNT = 5;
-const PAD_X = 7; // horizontal inset, in 0–100 viewBox units (== percent)
-const PAD_Y = 14; // vertical inset
+const POINT_COUNT = 5
+const PAD_X = 7 // horizontal inset, in 0–100 viewBox units (== percent)
+const PAD_Y = 14 // vertical inset
 
 // Energy bands, top (intense) to bottom (glacial) — Apple system hues.
 const GRADIENT_STOPS = [
@@ -17,108 +17,106 @@ const GRADIENT_STOPS = [
   { offset: "38%", color: "#bf5af2" }, // energetic
   { offset: "68%", color: "#0a84ff" }, // mellow
   { offset: "100%", color: "#40c8e0" }, // glacial
-];
+]
 
 // The curve animates point-by-point (staggered) to a fresh random target,
 // holds, then transitions to the next one — forever.
-const VALUE_MIN = 0.12;
-const VALUE_MAX = 0.88;
-const STAGGER = 110; // ms between successive points starting to move
-const DURATION = 700; // ms each point takes to reach its target
-const HOLD = 1000; // ms the curve rests once fully settled
+const VALUE_MIN = 0.05
+const VALUE_MAX = 0.95
+const STAGGER = 60 // ms between successive points starting to move
+const DURATION = 1200 // ms each point takes to reach its target
+const HOLD = 1600 // ms the curve rests once fully settled
 
 // Deterministic resting curve for first paint + reduced-motion fallback.
-const INITIAL = [0.55, 0.4, 0.62, 0.34, 0.5];
+const INITIAL = [0.55, 0.4, 0.62, 0.34, 0.5]
 
 const clamp = (v: number, lo: number, hi: number) =>
-  Math.min(hi, Math.max(lo, v));
+  Math.min(hi, Math.max(lo, v))
 
-// easeInOutCubic
+// easeInOutQuart
 const ease = (t: number) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2
 
 const randomCurve = () =>
   Array.from(
     { length: POINT_COUNT },
-    () => VALUE_MIN + Math.random() * (VALUE_MAX - VALUE_MIN),
-  );
+    () => VALUE_MIN + Math.random() * (VALUE_MAX - VALUE_MIN)
+  )
 
 const xs = Array.from(
   { length: POINT_COUNT },
-  (_, i) => PAD_X + (100 - 2 * PAD_X) * (i / (POINT_COUNT - 1)),
-);
+  (_, i) => PAD_X + (100 - 2 * PAD_X) * (i / (POINT_COUNT - 1))
+)
 
-const yForValue = (v: number) => PAD_Y + (100 - 2 * PAD_Y) * (1 - v);
+const yForValue = (v: number) => PAD_Y + (100 - 2 * PAD_Y) * (1 - v)
 
 // Catmull-Rom through the points, emitted as cubic béziers — same construction
 // the app uses (b1 = p1 + (p2 - pPrev)/6, b2 = p2 - (pNext - p1)/6).
 function splinePath(ys: number[]) {
-  const pts = xs.map((x, i) => ({ x, y: yForValue(ys[i]) }));
-  let d = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
+  const pts = xs.map((x, i) => ({ x, y: yForValue(ys[i]) }))
+  let d = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`
   for (let i = 0; i < pts.length - 1; i++) {
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const pPrev = i === 0 ? sub(scale(p1, 2), p2) : pts[i - 1];
-    const pNext =
-      i === pts.length - 2 ? sub(scale(p2, 2), p1) : pts[i + 2];
-    const b1 = add(p1, scale(sub(p2, pPrev), 1 / 6));
-    const b2 = sub(p2, scale(sub(pNext, p1), 1 / 6));
-    d += ` C ${b1.x.toFixed(2)} ${b1.y.toFixed(2)} ${b2.x.toFixed(2)} ${b2.y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    const p1 = pts[i]
+    const p2 = pts[i + 1]
+    const pPrev = i === 0 ? sub(scale(p1, 2), p2) : pts[i - 1]
+    const pNext = i === pts.length - 2 ? sub(scale(p2, 2), p1) : pts[i + 2]
+    const b1 = add(p1, scale(sub(p2, pPrev), 1 / 6))
+    const b2 = sub(p2, scale(sub(pNext, p1), 1 / 6))
+    d += ` C ${b1.x.toFixed(2)} ${b1.y.toFixed(2)} ${b2.x.toFixed(2)} ${b2.y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`
   }
-  return d;
+  return d
 }
 
-type Pt = { x: number; y: number };
-const add = (a: Pt, b: Pt): Pt => ({ x: a.x + b.x, y: a.y + b.y });
-const sub = (a: Pt, b: Pt): Pt => ({ x: a.x - b.x, y: a.y - b.y });
-const scale = (a: Pt, s: number): Pt => ({ x: a.x * s, y: a.y * s });
+type Pt = { x: number; y: number }
+const add = (a: Pt, b: Pt): Pt => ({ x: a.x + b.x, y: a.y + b.y })
+const sub = (a: Pt, b: Pt): Pt => ({ x: a.x - b.x, y: a.y - b.y })
+const scale = (a: Pt, s: number): Pt => ({ x: a.x * s, y: a.y * s })
 
 export default function EnergyCurve() {
-  const pathRef = useRef<SVGPathElement>(null);
-  const thumbRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pathRef = useRef<SVGPathElement>(null)
+  const thumbRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  const initialPath = useMemo(() => splinePath(INITIAL), []);
+  const initialPath = useMemo(() => splinePath(INITIAL), [])
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
+      return
     }
 
-    let raf = 0;
-    let from = [...INITIAL];
-    let to = randomCurve();
-    let cycleStart = performance.now();
+    let raf = 0
+    let from = [...INITIAL]
+    let to = randomCurve()
+    let cycleStart = performance.now()
 
     // When the last (most-delayed) point finishes its transition.
-    const settledAt = () =>
-      cycleStart + (POINT_COUNT - 1) * STAGGER + DURATION;
+    const settledAt = () => cycleStart + (POINT_COUNT - 1) * STAGGER + DURATION
 
     const tick = () => {
-      const now = performance.now();
+      const now = performance.now()
       if (now >= settledAt() + HOLD) {
-        from = to;
-        to = randomCurve();
-        cycleStart = now;
+        from = to
+        to = randomCurve()
+        cycleStart = now
       }
 
       const ys = from.map((f, i) => {
-        const p = clamp((now - (cycleStart + i * STAGGER)) / DURATION, 0, 1);
-        const v = f + (to[i] - f) * ease(p);
+        const p = clamp((now - (cycleStart + i * STAGGER)) / DURATION, 0, 1)
+        const v = f + (to[i] - f) * ease(p)
         // Nudge the thumb larger while it's mid-move, like grabbing it.
-        const grab = 1 + 0.16 * Math.sin(p * Math.PI);
-        const thumb = thumbRefs.current[i];
+        const grab = 1 + 0.16 * Math.sin(p * Math.PI)
+        const thumb = thumbRefs.current[i]
         if (thumb) {
-          thumb.style.top = `${yForValue(v)}%`;
-          thumb.style.transform = `translate(-50%, -50%) scale(${grab.toFixed(3)})`;
+          thumb.style.top = `${yForValue(v)}%`
+          thumb.style.transform = `translate(-50%, -50%) scale(${grab.toFixed(3)})`
         }
-        return v;
-      });
-      pathRef.current?.setAttribute("d", splinePath(ys));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+        return v
+      })
+      pathRef.current?.setAttribute("d", splinePath(ys))
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   return (
     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-hairline bg-foreground/[0.03]">
@@ -181,18 +179,16 @@ export default function EnergyCurve() {
         <div
           key={i}
           ref={(el) => {
-            thumbRefs.current[i] = el;
+            thumbRefs.current[i] = el
           }}
-          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/15 shadow-lg shadow-black/20 backdrop-blur-md dark:border-white/25"
+          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/25 shadow-lg shadow-black/10 backdrop-blur-xs dark:border-white/25"
           style={{
             left: `${x}%`,
             top: `${yForValue(INITIAL[i])}%`,
             transform: "translate(-50%, -50%)",
           }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/60" />
-        </div>
+        />
       ))}
     </div>
-  );
+  )
 }
