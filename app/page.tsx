@@ -44,21 +44,21 @@ export default function Home() {
         </div>
 
         <h1
-          className="mt-2 font-display text-3xl font-semibold tracking-tight animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
+          className="mt-2 font-display text-3xl font-bold tracking-tight animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.12s" }}
         >
           Playback
         </h1>
 
         <p
-          className="mt-0 font-display text-3xl font-medium leading-tight tracking-tight text-muted text-balance animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
+          className="mt-0 font-display text-3xl leading-tight tracking-tight text-muted text-balance animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.18s" }}
         >
           Rediscover your music library.
         </p>
 
         <div
-          className="mt-7 space-y-5 text-lg leading-relaxed text-pretty animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
+          className="mt-7 space-y-5 text-lg text-muted leading-relaxed text-pretty animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.26s" }}
         >
           <p>
