@@ -2,19 +2,16 @@ import EnergyCurve from "./EnergyCurve"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
 
 function Feature({
-  name,
   title,
   children,
   visual,
 }: {
-  name: string
   title: string
   children: React.ReactNode
   visual?: React.ReactNode
 }) {
   return (
     <section className="border-t border-hairline py-14 sm:py-20">
-      <p className="font-display text-s font-semibold text-muted">{name}</p>
       <h2 className="font-display text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
         {title}
       </h2>
@@ -73,7 +70,7 @@ export default function Home() {
         </a>
       </section>
 
-      <Feature name="Songs" title="A rotation tuned to you">
+      <Feature title="Songs">
         <p>
           An endless rotation drawn from your own library. A bespoke algorithm
           walks from one track to the next, weighing similarity, energy, and how
@@ -81,7 +78,7 @@ export default function Home() {
         </p>
       </Feature>
 
-      <Feature name="Playlists" title="Shuffle your whole library">
+      <Feature title="Playlists">
         <p>
           You&rsquo;ve got good taste: Playback brings it to the fore. The
           Playlists tab spins a dial through your Apple Music playlists and
@@ -90,11 +87,7 @@ export default function Home() {
         </p>
       </Feature>
 
-      <Feature
-        name="Design"
-        title="Draw the shape of a playlist"
-        visual={<EnergyCurve />}
-      >
+      <Feature title="Design" visual={<EnergyCurve />}>
         <p>
           Build a playlist by drawing its shape. Sketch an energy curve &mdash;
           from glacial calm up to full intensity &mdash; and Playback fills it

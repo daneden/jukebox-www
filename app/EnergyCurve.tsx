@@ -181,7 +181,7 @@ export default function EnergyCurve() {
           ref={(el) => {
             thumbRefs.current[i] = el
           }}
-          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/25 shadow-lg shadow-black/10 backdrop-blur-xs dark:border-white/25"
+          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/25 shadow-lg shadow-black/10 backdrop-blur-xs dark:border-white/15 dark:bg-black/25"
           style={{
             left: `${x}%`,
             top: `${yForValue(INITIAL[i])}%`,
