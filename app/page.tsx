@@ -35,14 +35,6 @@ export default function Home() {
           className="relative animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.05s" }}
         >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl"
-            style={{
-              background:
-                "radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%)",
-            }}
-          />
           <Logomark className="h-28 w-auto sm:h-32" />
         </div>
 
