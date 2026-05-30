@@ -1,3 +1,4 @@
+import Link from "next/link"
 import EnergyCurve from "./EnergyCurve"
 import SiteHeader from "./SiteHeader"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
@@ -105,7 +106,7 @@ export default function Home() {
         </p>
       </Feature>
 
-      <footer className="mt-6 border-t border-hairline py-10 font-display text-sm text-muted">
+      <footer className="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-hairline py-10 font-display text-sm text-muted">
         <p>
           Made by{" "}
           <a
@@ -116,6 +117,12 @@ export default function Home() {
           </a>
           . Music from Apple Music.
         </p>
+        <Link
+          href="/privacy-policy"
+          className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
+        >
+          Privacy
+        </Link>
       </footer>
     </main>
   )
