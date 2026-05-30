@@ -1,6 +1,4 @@
-import Link from "next/link"
 import EnergyCurve from "./EnergyCurve"
-import SiteHeader from "./SiteHeader"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
 
 function Feature({
@@ -30,8 +28,7 @@ function Feature({
 
 export default function Home() {
   return (
-    <main id="top" className="mx-auto max-w-xl px-6">
-      <SiteHeader />
+    <main className="mx-auto max-w-xl px-6">
       <section className="flex min-h-[88svh] flex-col justify-center py-20">
         <div
           className="relative animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
@@ -105,25 +102,6 @@ export default function Home() {
           mood.
         </p>
       </Feature>
-
-      <footer className="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-hairline py-10 font-display text-sm text-muted">
-        <p>
-          Made by{" "}
-          <a
-            href="https://daneden.me"
-            className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
-          >
-            Daniel Eden
-          </a>
-          . Music from Apple Music.
-        </p>
-        <Link
-          href="/privacy-policy"
-          className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
-        >
-          Privacy
-        </Link>
-      </footer>
     </main>
   )
 }

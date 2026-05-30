@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import SiteFooter from "./SiteFooter";
+import SiteHeader from "./SiteHeader";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,7 +41,11 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${sourceSerif.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        <SiteHeader />
+        <div className="flex-1">{children}</div>
+        <SiteFooter />
+      </body>
     </html>
   );
 }
