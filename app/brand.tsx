@@ -1,5 +1,5 @@
-// Swap this for the real listing URL once Playback is live on the App Store.
-export const APP_STORE_URL = "https://apps.apple.com/app/playback-music";
+export const APP_STORE_ID = "1587721900";
+export const APP_STORE_URL = `https://apps.apple.com/app/id${APP_STORE_ID}`;
 
 export function Logomark({ className }: { className?: string }) {
   return (

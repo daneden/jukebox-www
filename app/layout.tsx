@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import { APP_STORE_ID } from "./brand";
 import SiteFooter from "./SiteFooter";
 import SiteHeader from "./SiteHeader";
 
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
       "Playback spins your Apple Music library on a tactile cover-flow dial and resurfaces the songs you'd forgotten you loved.",
     type: "website",
   },
+  itunes: { appId: APP_STORE_ID },
 };
 
 export const viewport: Viewport = {
