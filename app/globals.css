@@ -5,7 +5,7 @@
   --foreground: #14110f;
   --muted: #6b6560;
   --hairline: rgba(20, 17, 15, 0.1);
-  --accent: #e8472b;
+  --accent: var(--muted);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,7 +14,7 @@
     --foreground: #f3f1ee;
     --muted: #9a948e;
     --hairline: rgba(243, 241, 238, 0.14);
-    --accent: #ff6a4d;
+    --accent: var(--muted);
   }
 }
 
@@ -38,10 +38,12 @@ body {
 @keyframes rise {
   from {
     opacity: 0;
+    filter: blur(8px);
     transform: translateY(0.75rem);
   }
   to {
     opacity: 1;
+    filter: blur(0);
     transform: none;
   }
 }
