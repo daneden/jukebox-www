@@ -14,10 +14,10 @@ const PAD_Y = 14 // vertical inset
 
 // Energy bands, top (intense) to bottom (glacial) — Apple system hues.
 const GRADIENT_STOPS = [
-  { offset: "0%", color: energyColors.intense },
-  { offset: "38%", color: energyColors.energetic },
-  { offset: "68%", color: energyColors.mellow },
-  { offset: "100%", color: energyColors.glacial },
+  { offset: "20%", color: energyColors.intense },
+  { offset: "40%", color: energyColors.energetic },
+  { offset: "60%", color: energyColors.mellow },
+  { offset: "80%", color: energyColors.glacial },
 ]
 
 // The curve animates point-by-point (staggered) to a fresh random target,
@@ -159,7 +159,7 @@ export default function EnergyCurve() {
           d={initialPath}
           fill="none"
           stroke="url(#energy-gradient)"
-          strokeWidth={6}
+          strokeWidth={8}
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
@@ -182,7 +182,7 @@ export default function EnergyCurve() {
           ref={(el) => {
             thumbRefs.current[i] = el
           }}
-          className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-white/25 shadow-lg shadow-black/10 backdrop-blur-xs dark:border-white/15 dark:bg-background/25"
+          className="absolute flex h-8 w-8 items-center justify-center rounded-full border border-white/40 bg-white/25 shadow-lg shadow-black/10 backdrop-blur-xs dark:border-white/15 dark:bg-background/25"
           style={{
             left: `${x}%`,
             top: `${yForValue(INITIAL[i])}%`,
