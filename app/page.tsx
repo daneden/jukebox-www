@@ -1,6 +1,7 @@
 import EnergyCurve from "./EnergyCurve"
 import SiriPhrases from "./SiriPhrases"
 import SongCarousel from "./SongCarousel"
+import SongConstellation from "./SongConstellation"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
 
 function Feature({
@@ -13,7 +14,7 @@ function Feature({
   visual?: React.ReactNode
 }) {
   return (
-    <section className="border-t border-hairline py-14 sm:py-20">
+    <section className="py-10 sm:py-14">
       <h2 className="font-display text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
         {title}
       </h2>
@@ -28,7 +29,7 @@ function Feature({
 export default function Home() {
   return (
     <main className="mx-auto max-w-xl px-6">
-      <section className="flex min-h-[88svh] flex-col justify-center py-20">
+      <section className="flex min-h-[80svh] flex-col justify-center py-10">
         <div
           className="relative animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.05s" }}
@@ -72,20 +73,26 @@ export default function Home() {
         </a>
       </section>
 
-      <Feature title="Songs" visual={<SongCarousel />}>
+      <Feature title="Songs" visual={<SongConstellation />}>
         <p>
           An endless rotation drawn from your own library. A bespoke algorithm
-          walks from one track to the next, weighing similarity, energy, and how
-          long it&rsquo;s been since you last listened.
+          blends genre lineage, song tempo, and sonic similarity to build a queue
+          that prioritises the songs you&rsquo;ve played most and those that have
+          been in your library longest.
         </p>
 
         <p>
-          Every play is saved to Playback&rsquo;s History, so you can save the
-          playlists you love.
+          The result is a unique playback queue that feels curated, built from the
+          songs you already care about.
+        </p>
+
+        <p>
+          Every played queue is saved to Playback&rsquo;s History, so you can save
+          the playlists you love.
         </p>
       </Feature>
 
-      <Feature title="Playlists">
+      <Feature title="Playlists" visual={<SongCarousel />}>
         <p>
           You&rsquo;ve got good taste: Playback brings it to the fore. The
           Playlists tab spins a dial through your Apple Music playlists and

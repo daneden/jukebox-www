@@ -53,7 +53,7 @@ body {
 @keyframes letter-in {
   from {
     opacity: 0;
-    filter: blur(8px);
+    filter: blur(6px);
     transform: translateY(0.5em);
   }
   to {
@@ -71,7 +71,7 @@ body {
   }
   to {
     opacity: 0;
-    filter: blur(8px);
+    filter: blur(6px);
     transform: translateY(-0.5em);
   }
 }
@@ -87,6 +87,27 @@ body {
 
 .siri-letter-out {
   animation: letter-out 0.34s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+/* Like letter-out, but the glyph also scales to nothing — used when a label
+   shrinks to shorter text, so trailing letters collapse to 0 ahead of the
+   pill's clipping edge instead of being sliced by it. Staggered right-to-left
+   (delay set inline) so the trailing edge empties first. */
+@keyframes letter-collapse {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(-0.5em) scale(0);
+  }
+}
+
+.siri-letter-collapse {
+  animation: letter-collapse 0.34s cubic-bezier(0.4, 0, 1, 1) both;
 }
 
 /* A soft gradient bloom that grows, brightens, and drifts across the panel
