@@ -24,7 +24,7 @@ const GRADIENT_STOPS = [
 // holds, then transitions to the next one — forever.
 const VALUE_MIN = 0.05
 const VALUE_MAX = 0.95
-const STAGGER = 60 // ms between successive points starting to move
+const STAGGER = 120 // ms between successive points starting to move
 const DURATION = 1200 // ms each point takes to reach its target
 const HOLD = 1600 // ms the curve rests once fully settled
 

@@ -1,5 +1,6 @@
 import EnergyCurve from "./EnergyCurve"
 import SiriPhrases from "./SiriPhrases"
+import SongCarousel from "./SongCarousel"
 import { APP_STORE_URL, AppleLogo, Logomark } from "./brand"
 
 function Feature({
@@ -71,11 +72,16 @@ export default function Home() {
         </a>
       </section>
 
-      <Feature title="Songs">
+      <Feature title="Songs" visual={<SongCarousel />}>
         <p>
           An endless rotation drawn from your own library. A bespoke algorithm
           walks from one track to the next, weighing similarity, energy, and how
           long it&rsquo;s been since you last listened.
+        </p>
+
+        <p>
+          Every play is saved to Playback&rsquo;s History, so you can save the
+          playlists you love.
         </p>
       </Feature>
 
@@ -101,8 +107,8 @@ export default function Home() {
         <p>
           Every mode answers to your voice. Ask Siri to make a playlist, design
           one by mood, play something at random, or save what&rsquo;s playing to
-          your library &mdash; and tap a Control Center button to start the music
-          without unlocking your phone.
+          your library &mdash; and tap a Control Center button to start the
+          music without unlocking your phone.
         </p>
         <p>
           It all runs on Shortcuts, so you can wire Playback into routines of
