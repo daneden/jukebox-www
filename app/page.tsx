@@ -48,7 +48,7 @@ export default function Home() {
           className="mt-0 font-display text-3xl leading-tight tracking-tight text-muted text-balance animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.18s" }}
         >
-          Rediscover your music library.
+          Rediscover your music.
         </p>
 
         <div
@@ -76,19 +76,19 @@ export default function Home() {
       <Feature title="Songs" visual={<SongConstellation />}>
         <p>
           An endless rotation drawn from your own library. A bespoke algorithm
-          blends genre lineage, song tempo, and sonic similarity to build a queue
-          that prioritises the songs you&rsquo;ve played most and those that have
-          been in your library longest.
+          blends genre lineage, song tempo, and sonic similarity to build a
+          queue that prioritises the songs you&rsquo;ve played most and those
+          that have been in your library longest.
         </p>
 
         <p>
-          The result is a unique playback queue that feels curated, built from the
-          songs you already care about.
+          The result is a unique playback queue that feels curated, built from
+          the songs you already care about.
         </p>
 
         <p>
-          Every played queue is saved to Playback&rsquo;s History, so you can save
-          the playlists you love.
+          Every played queue is saved to Playback&rsquo;s History, so you can
+          save the playlists you love.
         </p>
       </Feature>
 
