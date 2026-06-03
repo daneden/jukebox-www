@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react"
 import { energyColors } from "./energyColors"
+import { useInView } from "./useInView"
 
 // Mirrors the real app's EnergyCurveEditor: five control points joined by a
 // Catmull-Rom spline, stroked with a vertical energy gradient (intense at the
@@ -76,10 +77,12 @@ const scale = (a: Pt, s: number): Pt => ({ x: a.x * s, y: a.y * s })
 export default function EnergyCurve() {
   const pathRef = useRef<SVGPathElement>(null)
   const thumbRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [rootRef, inView] = useInView<HTMLDivElement>()
 
   const initialPath = useMemo(() => splinePath(INITIAL), [])
 
   useEffect(() => {
+    if (!inView) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return
     }
@@ -117,10 +120,13 @@ export default function EnergyCurve() {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [])
+  }, [inView])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
+    <div
+      ref={rootRef}
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]"
+    >
       {/* dot-grid backdrop */}
       <div
         aria-hidden

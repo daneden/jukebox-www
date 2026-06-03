@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef } from "react"
+import { useInView } from "./useInView"
 
 // A Cover Flow–style carousel of album art from the user's library: the centre
 // cover faces forward while neighbours angle inward and spill past the panel
@@ -67,8 +68,10 @@ const zIndexFor = (o: number) => String(Math.round(1000 - Math.abs(o) * 100))
 
 export default function SongCarousel() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [rootRef, inView] = useInView<HTMLDivElement>()
 
   useEffect(() => {
+    if (!inView) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return
     }
@@ -101,10 +104,13 @@ export default function SongCarousel() {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [])
+  }, [inView])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
+    <div
+      ref={rootRef}
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]"
+    >
       <div
         aria-hidden
         className="absolute inset-0"

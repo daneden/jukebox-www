@@ -9,6 +9,7 @@ import {
   useSyncExternalStore,
 } from "react"
 import { energyColors, type EnergyBand } from "./energyColors"
+import { useInView } from "./useInView"
 
 // A picture of the Songs curation walk. Each track is a node placed in a 2-D
 // projection of its 512-d sonic signature (Apple's AudioFeaturePrint), so
@@ -201,6 +202,7 @@ export default function SongConstellation() {
   // each frame is written straight to refs.
   const [hop, setHop] = useState(0)
   const reduced = usePrefersReducedMotion()
+  const [rootRef, inView] = useInView<HTMLDivElement>()
 
   const hopRef = useRef(0)
   const graphRef = useRef<HTMLDivElement>(null)
@@ -219,6 +221,7 @@ export default function SongConstellation() {
 
   useEffect(() => {
     if (reduced) return
+    if (!inView) return
 
     // Paint a node's dot at a given lit level (0 = rest). The active
     // destination is tinted with its energy hue and glows; a settled node on
@@ -340,7 +343,7 @@ export default function SongConstellation() {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [reduced])
+  }, [reduced, inView])
 
   // After each hop, size each pill to its new label so the width transition
   // runs from the old width to the new. Measuring the incoming label (not the
@@ -371,7 +374,10 @@ export default function SongConstellation() {
   const walked = new Set(reduced ? TOUR : [])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
+    <div
+      ref={rootRef}
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]"
+    >
       {/* dot-grid backdrop — reads as the embedding space the nodes live in */}
       <div
         aria-hidden
