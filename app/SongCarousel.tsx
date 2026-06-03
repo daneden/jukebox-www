@@ -96,8 +96,17 @@ export default function SongCarousel() {
       cardRefs.current.forEach((card, i) => {
         if (!card) return
         const o = offset(i, p)
+        const op = opacityFor(o)
+        // Covers that have faded out entirely (wrapped to the far side) still
+        // carry a blur-xl shadow layer; taking them out of the render tree
+        // spares the mobile compositor that overdraw until they swing back in.
+        if (op <= 0) {
+          card.style.display = "none"
+          return
+        }
+        card.style.display = ""
         card.style.transform = transformFor(o)
-        card.style.opacity = String(opacityFor(o))
+        card.style.opacity = String(op)
         card.style.zIndex = zIndexFor(o)
       })
       raf = requestAnimationFrame(tick)
