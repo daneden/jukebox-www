@@ -147,6 +147,29 @@ function usePrefersReducedMotion() {
   )
 }
 
+// The lineage separator. Inter's Google-Fonts subsets ship ↑/↓ (U+2191/2193)
+// but not → (U+2192) or ← (U+2190) — and no subset, "latin-ext" included,
+// adds them — so a literal "→" silently falls back to a system font. We draw
+// it as a vector instead so it always matches the surrounding text's colour
+// and weight, independent of the loaded font's glyph coverage.
+const ARROW = "→"
+function ArrowGlyph() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="inline-block h-[1em] w-[0.9em] align-[-0.1em]"
+    >
+      <path d="M4 12h15M13 6l6 6-6 6" />
+    </svg>
+  )
+}
+
 // A label whose characters roll into ("in") or out of ("out") place one after
 // another — the same flip-clock cascade the Siri phrases use (keyframes in
 // globals.css). Re-key it (`key`) on each hop so the animation restarts. A hop
@@ -176,7 +199,7 @@ const FlipText = forwardRef<
           className={letter}
           style={mode === "none" ? undefined : { animationDelay: `${delay(i)}ms` }}
         >
-          {ch}
+          {ch === ARROW ? <ArrowGlyph /> : ch}
         </span>
       ))}
     </span>
