@@ -140,21 +140,6 @@ export default function SongCarousel() {
                 zIndex: zIndexFor(o),
               }}
             >
-              {/* Chromatic shadow: a blurred copy of the same art bleeding its
-                  colours out behind the cover, sunk back in Z so it reads as a
-                  coloured glow on the floor rather than a flat grey drop. */}
-              <Image
-                aria-hidden
-                src={src}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 50vw, 240px"
-                loading="eager"
-                className="rounded-xl object-cover opacity-20 blur-xl brightness-50 saturation-150"
-                style={{
-                  transform: "translateY(6%) scale(0.92) translateZ(-1px)",
-                }}
-              />
               <Image
                 src={src}
                 alt=""
