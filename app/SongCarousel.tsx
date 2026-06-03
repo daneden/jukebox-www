@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef } from "react"
+import { useInView } from "./useInView"
 
 // A Cover Flow–style carousel of album art from the user's library: the centre
 // cover faces forward while neighbours angle inward and spill past the panel
@@ -67,8 +68,10 @@ const zIndexFor = (o: number) => String(Math.round(1000 - Math.abs(o) * 100))
 
 export default function SongCarousel() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [rootRef, inView] = useInView<HTMLDivElement>()
 
   useEffect(() => {
+    if (!inView) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return
     }
@@ -93,18 +96,30 @@ export default function SongCarousel() {
       cardRefs.current.forEach((card, i) => {
         if (!card) return
         const o = offset(i, p)
+        const op = opacityFor(o)
+        // Covers that have faded out entirely (wrapped to the far side) still
+        // carry a blur-xl shadow layer; taking them out of the render tree
+        // spares the mobile compositor that overdraw until they swing back in.
+        if (op <= 0) {
+          card.style.display = "none"
+          return
+        }
+        card.style.display = ""
         card.style.transform = transformFor(o)
-        card.style.opacity = String(opacityFor(o))
+        card.style.opacity = String(op)
         card.style.zIndex = zIndexFor(o)
       })
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [])
+  }, [inView])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
+    <div
+      ref={rootRef}
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]"
+    >
       <div
         aria-hidden
         className="absolute inset-0"
@@ -125,21 +140,6 @@ export default function SongCarousel() {
                 zIndex: zIndexFor(o),
               }}
             >
-              {/* Chromatic shadow: a blurred copy of the same art bleeding its
-                  colours out behind the cover, sunk back in Z so it reads as a
-                  coloured glow on the floor rather than a flat grey drop. */}
-              <Image
-                aria-hidden
-                src={src}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 50vw, 240px"
-                loading="eager"
-                className="rounded-xl object-cover opacity-20 blur-xl brightness-50 saturation-150"
-                style={{
-                  transform: "translateY(6%) scale(0.92) translateZ(-1px)",
-                }}
-              />
               <Image
                 src={src}
                 alt=""

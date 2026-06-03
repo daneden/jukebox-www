@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react"
 import { energyColors } from "./energyColors"
+import { useInView } from "./useInView"
 
 // Mirrors the real app's EnergyCurveEditor: five control points joined by a
 // Catmull-Rom spline, stroked with a vertical energy gradient (intense at the
@@ -76,10 +77,12 @@ const scale = (a: Pt, s: number): Pt => ({ x: a.x * s, y: a.y * s })
 export default function EnergyCurve() {
   const pathRef = useRef<SVGPathElement>(null)
   const thumbRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [rootRef, inView] = useInView<HTMLDivElement>()
 
   const initialPath = useMemo(() => splinePath(INITIAL), [])
 
   useEffect(() => {
+    if (!inView) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return
     }
@@ -88,6 +91,16 @@ export default function EnergyCurve() {
     let from = [...INITIAL]
     let to = randomCurve()
     let cycleStart = performance.now()
+
+    // Thumbs are laid out at their resting (INITIAL) `top`; per-frame motion is
+    // a transform offset from there, so we never touch the layout-triggering
+    // `top` property mid-animation. The offset is in px, so we need the panel's
+    // height — measured here and kept fresh on resize.
+    let hostHeight = rootRef.current?.clientHeight ?? 0
+    const measure = () => {
+      hostHeight = rootRef.current?.clientHeight ?? 0
+    }
+    window.addEventListener("resize", measure)
 
     // When the last (most-delayed) point finishes its transition.
     const settledAt = () => cycleStart + (POINT_COUNT - 1) * STAGGER + DURATION
@@ -107,8 +120,10 @@ export default function EnergyCurve() {
         const grab = 1 + 0.16 * Math.sin(p * Math.PI)
         const thumb = thumbRefs.current[i]
         if (thumb) {
-          thumb.style.top = `${yForValue(v)}%`
-          thumb.style.transform = `translate(-50%, -50%) scale(${grab.toFixed(3)})`
+          // Vertical delta from the resting position, as a transform — keeps
+          // the thumb on the compositor instead of re-laying-out every frame.
+          const dy = ((yForValue(v) - yForValue(INITIAL[i])) / 100) * hostHeight
+          thumb.style.transform = `translate(-50%, calc(-50% + ${dy.toFixed(1)}px)) scale(${grab.toFixed(3)})`
         }
         return v
       })
@@ -116,11 +131,17 @@ export default function EnergyCurve() {
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener("resize", measure)
+    }
+  }, [inView, rootRef])
 
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]">
+    <div
+      ref={rootRef}
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl inset-ring inset-ring-foreground/10 bg-foreground/[0.03]"
+    >
       {/* dot-grid backdrop */}
       <div
         aria-hidden
@@ -163,7 +184,6 @@ export default function EnergyCurve() {
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
-          style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.18))" }}
         />
       </svg>
 
