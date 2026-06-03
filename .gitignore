@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+# this project uses bun; bun.lock is the source of truth
+package-lock.json
 /.pnp
 .pnp.*
 .yarn/*
