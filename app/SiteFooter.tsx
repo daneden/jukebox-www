@@ -14,12 +14,20 @@ export default function SiteFooter() {
           </a>
           . Music from Apple Music.
         </p>
-        <Link
-          href="/privacy-policy"
-          className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
-        >
-          Privacy
-        </Link>
+        <div className="flex items-center gap-x-6">
+          <Link
+            href="/help"
+            className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
+          >
+            Help
+          </Link>
+          <Link
+            href="/privacy-policy"
+            className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-accent"
+          >
+            Privacy
+          </Link>
+        </div>
       </div>
     </footer>
   );
