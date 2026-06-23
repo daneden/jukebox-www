@@ -49,7 +49,7 @@ export default function SiteHeader() {
             href="/"
             className="flex items-center gap-2 transition-opacity hover:opacity-70"
           >
-            <Logomark className="h-6 w-auto" />
+            <Logomark className="h-[18px] w-auto" />
             <span className="font-display text-base font-bold tracking-tight">
               Playback
             </span>

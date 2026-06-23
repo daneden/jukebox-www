@@ -34,7 +34,7 @@ export default function Home() {
           className="relative animate-[rise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ animationDelay: "0.05s" }}
         >
-          <Logomark className="h-22 w-auto" />
+          <Logomark className="h-16 w-auto" />
         </div>
 
         <h1
